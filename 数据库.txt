@@ -1,0 +1,153 @@
+data model是描述数据的集合（如关系模型）
+relation指一张表
+schema指表中的列。如Student(No, name, sex, ... )
+
+DBMS架构：
+view：描述应用能看到的数据
+conceptual schema：数据库组织数据的方式，table等
+physical schema：文件的物理存储方式、数据结构等，如B+树
+
+transaction用来处理：并发、系统故障
+
+key唯一决定一个entity
+In an Isa hierarchy, only the root entity set has a key.
+weak entity的属性需要依赖其他实体才能作为key。如，球员的号码不能作为球员的key，但是和球队的名字一起可以作为球员的key。
+
+把attributes分离成entity set需要满足：
+1.包含一些非键属性
+2.它是many-one或many-many中的many一端
+
+superkey决定所有属性。
+candidate key是具有superkey性质的最小子集，可能有多个。
+key是candidate key中的一个。
+
+求candidate key：
+（1）如果有属性不在函数依赖集中出现，那么它必须包含在候选码中；
+（2）如果有属性只在函数依赖集的左边出现，则该属性一定包含在候选码中。
+（3）如果有属性或属性组能唯一标识元组，则它就是候选码；
+
+closure：Y的closure表示集合Y（通过函数依赖）能决定的最大的属性集合。
+
+nontrivial（非平凡） FD：X->Y,且X不包含Y。
+
+逻辑蕴含：
+对于满足一组函数依赖 F 的关系模式 R(U,F),其任何一个关系r,若函数依赖X→Y都成立(即r中任意两元组t,s,若t[X]=s[X],则t[Y]=s[Y]),则称 F 逻辑蕴含X→Y。
+
+Armstrong公理系统：
+设U为属性总体,F是U上的一组函数依赖,于是有关系模式R(U,F)对R(U,F)来说有以下的推理规则
+1.自反律：若Y⊆X⊆U,则X→Y为F所蕴含。
+2.增广律：若X→Y为F所蕴含,且Z⊆U,则XZ→YZ为F所蕴涵。
+3.传递律：若X→Y及Y→Z为F所蕴涵,则X→Z为F所蕴涵。
+
+推理规则：
+1.合并规则：由X→Y,X→Z,有X→YZ
+2.伪传递规则：由X→Y,WY→Z,有XW→Z
+3.分解规则：由X→Y及Z⊆Y,有X→Z
+
+在关系模式R(U,F)中为F所逻辑蕴含的函数依赖的全体叫做F的闭包,记为F+。
+
+求属性集X(X⊆U)关于U上的函数依赖集F的闭包XF+。
+例1：
+由关系模式R(U,F),其中U={A,B,C,D,E},F={AB→C,B→D,C→E,EC→B,AC→B},求(AB)F+。
+解：
+• 设X(0)=AB;
+• 计算X(1),找左部为A和B的函数依赖,有X(1)=AB∪CD=ABCD;
+• 计算X(2),有X(2)=ABCD∪BCDE=ABCDE;
+• X(2)已是全部属性,所以(AB)F+ =ABCDE。
+
+例2：
+由关系模式R(U,F),其中U={A,B,C,D,E},F={AB→C,B→D,C→E,EC→B,AC→B},求(CD)F+。
+解：
+• 设X(0)=CD;
+• 计算X(1),找左部为C和D的函数依赖,有X(1)=CD∪E=CDE;
+• 计算X(2),有X(2)=CDE∪B=BCDE;
+• 计算X(3),有X(3)=BCDE∪Ф=BCDE;
+• 因为X(3)= X(2),所以(CD)F+ =BCDE。
+
+如果G+=F+,就说函数依赖集F覆盖G(F是G的覆盖,或G是F的覆盖),或F与G等价。
+
+F+=G+的充分必要条件是F⊆G+ 及G⊆F+。
+
+如果函数依赖集满足下列条件,则称F为一个极小函数依赖集,也称为最小依赖集或最小覆盖。
+(1) F中任一函数依赖的右部仅含一个属性
+(2) F中不存在这样的函数依赖X→A,使得F与F-{X→A}等价; // 说明X→A是多余函数依赖
+(3) F中不存在这样的函数依赖X→A,X有真子集Z使得(F-{X→A})∪{Z→A}与F等价。//每个FD的左边没有冗余的属性
+
+完全函数依赖：在一个关系中，若非主属性数据项依赖于全部关键字称之为完全函数依赖。
+部分函数依赖：在一个关系中，若非主属性数据项依赖于部分关键字称之为部分函数依赖。
+传递函数依赖：在关系模式R(U)中，设X，Y，Z是U的不同的属性子集，如果X确定Y、Y确定Z，且有X不包含Y，Y不确定X，（X∪Y）∩Z=空集合，则称Z传递函数依赖(transitive functional dependency) 于X。
+
+
+关系代数：
+R1 := SELECT C (R2)。C是条件
+R1 := PROJ L (R2)。L是要选择的列名
+R3 := R1 * R2。笛卡尔积，R3行数 = R1行数 × R2行数
+R3 := R1 JOIN C R2。Theta-Join，计算R1*R2，并根据条件C筛选结果
+R3 := R1 JOIN R2。Natural Join。
+R1 := RENAME R1 (R2) 或 R1 := R2。R1为下标。将R1重命名成R2
+
+三值逻辑：
+1.“或”运算：优先级True > Unknown > False。即A || B时，A、B中有一个为True时，表达式为True；若没有True，有一个为Unknown时，表达式为Unknown；True和Unknown都没有时，表达式为False。
+2.“与”运算：优先级False > Unknown > True。即A && B时，A、B中有一个为False时，表达式为False；若没有False，有一个为Unknown时，表达式为Unknown；False和Unknown都没有时，表达式为True。
+3.“非”运算：~True = False, ~False = True, ~Unknown = Unknown
+
+
+SQL语句：
+1.SELECT <attribute> AS <new_name> FROM <table> WHERE <condition>
+2.like操作符，%匹配0个及以上字符，_单个字符
+3.<tuple> IN <relation>
+4.EXISTS(<relation>)
+5.x = ANY(<relation>) 表示x存在于relation中
+6.x <> ALL(<relation>) 表示x和relation中的任意一个tuple都不相同
+7.并、交、差
+( <subquery> ) UNION ( <subquery> )
+( <subquery> ) INTERSECT ( <subquery> )
+( <subquery> ) EXCEPT ( <subquery> )
+8.select distinct：消除重复
+9.group by必须位于where之后
+10.聚集函数的条件句必须用having
+11.INSERT INTO <table> values(<list of values>)
+12.DELETE FROM <table> WHERE <condition>
+13.UPDATE <table> SET <x=y...> WHERE <condition>
+14.CREATE TABLE <name> (<list of elements>)
+15.DROP TABLE <name>
+16.ALTER TABLE <name> ADD/DROP <attributes>
+17.CREATE VIEW <name> AS <query>
+18.GRANT <list of privileges> ON <objects> TO <list of authorization IDs>
+19.WITH GRANT OPETION，允许被授权用户授权给其他用户
+20.REVOKE <list of privileges> ON <objects> TO <list of authorization IDs>
+21.REVOKE的附加选项：CASCADE，级联取消授权，收回被授权者授予的权限；RESTRICT，如果授权者有授予别的用户权限，则本次REVOKE失败
+
+外键必须引用被引用表中的PRIMARY KEY或UNIQUE
+
+ACID Transactions:
+Atomic：一个事务(transaction)中的所有操作，要么全部完成，要么全部不完成，不会结束在中间某个环节。事务在执行过程中发生错误，会被回滚（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样。
+Consistent：在事务开始之前和事务结束以后，数据库的完整性限制没有被破坏。
+Isolated：当两个或者多个事务并发访问（此处访问指查询和修改的操作）数据库的同一数据时所表现出的相互关系。
+Durable：在事务完成以后，该事务对数据库所作的更改便持久地保存在数据库之中，并且是完全的。
+
+Isolation levels:
+1.Serializable: 直译就是"序列化",意思是说这个事务执行的时候不允许别的事务并发执行. 
+2.Repeatable read: 直译就是"可以重复读",这是说在同一个事务里面先后执行同一个查询语句的时候,得到的结果是一样的. 
+3.Read committed: 直译就是"读提交",意思就是语句提交以后即执行了COMMIT以后别的事务就能读到这个改变. 
+4.Read uncommitted: 直译就是"读未提交",意思就是即使一个更新语句没有提交,但是别的事务可以读到这个改变.这是很不安全的. 
+
+锁：
+1.Exclusive Lock（X锁）：任何一个事务都不能读写数据
+2.Shared Lock（S锁）：可以并行读取数据，但任何一个事务都不能修改数据
+3.Upgrade Lock（U锁）：为了防止死锁而设置，可以在要更新数据时升级成X锁
+4.Intent Lock（意向锁）：一种辅助的锁，如加了IS锁在table上，table内就不能加X锁。
+
+
+
+
+
+
+
+
+
+
+
+
+
+

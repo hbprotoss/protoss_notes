@@ -1,0 +1,33 @@
+git init
+git add <file>
+git commit
+
+git暂存区
+位于版本库和工作区之间的一个阶段。通过git add之后还没有commit的文件会添加到暂存区
+
+git diff HEAD: 比较工作区和版本库里的文件的差异
+git diff --cached或git diff --staged: 比较暂存区和版本库里的文件的差异
+
+commit提交的永远是暂存区里的数据
+
+.git/index里存的是暂存区的文件索引目录树，所有对象都存在.git/objects里。
+HEAD是个游标，和master等效。当add时，index里存的信息会被更新；当commit时，index里存的目录树会被更新到master分支。
+
+git ls-tree列出版本库中的目录树
+git ls-files列出暂存区中的目录树
+
+git stash暂时保存工作区和暂存区的状态，并且清空。（apply恢复进度；pop弹出进度并恢复到当前）
+git log显示提交日志。--decorate能显示里程碑
+
+git cat-file显示git对象的信息
+
+git branch分支管理
+
+git reset移动HEAD游标。--hard重置引用指向、暂存区、工作区，--mixed（或空）重置引用指向、暂存区，--soft重置引用指向
+^表示父节点。如HEAD^表示master分支上的前一次提交
+
+git reflog显示操作日志
+
+git tag里程碑
+
+git describe显示最近版本号
