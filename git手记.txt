@@ -31,3 +31,6 @@ git reflog显示操作日志
 git tag里程碑
 
 git describe显示最近版本号
+
+git fetch从远程repo取回数据
+git pull从远程repo取回数据，并合并到当前分支
