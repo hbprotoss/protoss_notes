@@ -34,3 +34,12 @@ git describe显示最近版本号
 
 git fetch从远程repo取回数据
 git pull从远程repo取回数据，并合并到当前分支
+
+git checkout <commit> -- <file>
+从暂存区检出文件到工作区。
+git checkout <branch>
+切换分支。注意，所有修改必须已经commit，否则默认参数下会报错提醒。
+
+git merge <branch>
+合并分支。将HEAD合并到<branch>分支上。如果HEAD是<branch>的直接上游，只需简单移动HEAD指针即可，即所谓的fast forward。
+-d 删除分支
