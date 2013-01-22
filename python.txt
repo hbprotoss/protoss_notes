@@ -1,0 +1,5 @@
+1. functools.partial: 将一个函数的部分参数固定，包装成一个新函数。例如：
+basetwo = functools.partial(int, base=2)
+basetwo('1001')
+#9
+basetwo专门用做将二进制字符串转化成对应十进制数输出。
