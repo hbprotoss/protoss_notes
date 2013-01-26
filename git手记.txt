@@ -43,3 +43,6 @@ git checkout <branch>
 git merge <branch>
 合并分支。将HEAD合并到<branch>分支上。如果HEAD是<branch>的直接上游，只需简单移动HEAD指针即可，即所谓的fast forward。
 -d 删除分支
+
+git rebase --onto master server client
+检出client分支，找出client和server分支的共同祖先，并在master上重演一遍。
