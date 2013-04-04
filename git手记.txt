@@ -46,3 +46,6 @@ git merge <branch>
 
 git rebase --onto master server client
 检出client分支，找出client和server分支的共同祖先，并在master上重演一遍。
+
+git push origin :branch_you_want_to_delete
+删除远程分支。就是把一个空的分支赋值给已经存在的分支，这样就能删除了
